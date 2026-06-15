@@ -203,22 +203,20 @@ class GameViewModel : ViewModel() {
         val currentBoard = _board.value
         val newBoard = Array(20) { IntArray(10) }
         
-        // Desplazar hacia arriba
+        
         for (i in 0 until 20 - lines) {
             newBoard[i] = currentBoard[i + lines]
         }
         
-        // Agregar líneas basura
         for (i in 20 - lines until 20) {
             val emptyHole = (0 until 10).random()
             for (j in 0 until 10) {
-                newBoard[i][j] = if (j == emptyHole) 0 else 2 // 2 representa bloque gris/basura
+                newBoard[i][j] = if (j == emptyHole) 0 else 2 
             }
         }
         
         _board.value = newBoard
         
-        // Si al desplazar hacia arriba hay bloques en fila < 0, sería game over (simplificado)
         if (currentBoard.take(lines).any { row -> row.any { it != 0 } }) {
             _gameOver.value = true
             socketRepository.sendGameOver()
